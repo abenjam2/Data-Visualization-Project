@@ -1,0 +1,118 @@
+<meta charset="utf-8">
+
+<script src="https://d3js.org/d3.v4.js"></script>
+
+<script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+
+<body>
+  <button type="button" onclick="window.location.href='index.html'">Scene 1</button>
+  <button type="button" onclick="window.location.href='Scene2(AverageMPGBar).html'">Scene 2</button>
+  <button type="button" onclick="window.location.href='Scene3(Bubbles).html'">Scene 3</button>
+  <h1>Difference in Fuel Efficiency in Different Fuel Types</h1>
+  <h4>Lastly, we expore the amount of each fuel type represented in the data.</h4>
+  <h4>Although electric vehicles are by far the most efficient, there are very few electric vehicles.</h4>
+  <h4>As each person's carbon footprint expands each waking day, perhaps an increase in electric vehicles is a great way to save our planet.</h4>
+  <h6>Please mouseover the individual circle for the amount of vehicles of that fuel type. The circles may be dragged as well.</h6>
+
+<div id="my_dataviz"></div>
+
+<style>
+.node:hover{
+  stroke-width: 7px !important;
+  opacity: 1 !important;
+}
+</style>
+
+<script>
+
+var width = 460
+var height = 460
+
+var svg = d3.select("#my_dataviz")
+  .append("svg")
+    .attr("width", width)
+    .attr("height", height)
+
+  const data = [
+                  { key: "Gasoline", values: 130 },
+                  { key: "Diesel", values: 6 },
+                  { key: "Electric", values: 11}];
+
+  var color = d3.scaleOrdinal()
+    .domain(["Gasoline", "Diesel", "Electric" ])
+    .range([ "#F8766D", "#00BA38", "#619CFF"])
+
+  var size = d3.scaleLinear()
+    .domain([0, 1400000000])
+    .range([15,70])
+
+  var Tooltip = d3.select("#my_dataviz")
+    .append("div")
+    .style("opacity", 0)
+    .attr("class", "tooltip")
+    .style("background-color", "white")
+
+  var mouseover = function(d) {
+    Tooltip
+      .style("opacity", 1)
+  }
+  var mousemove = function(d) {
+    Tooltip
+      .html('<u>' + d.key + '</u>' + "<br>" + d.values + " vehicles")
+      .style("left", (d3.mouse(this)[0]+20) + "px")
+      .style("top", (d3.mouse(this)[1]) + "px")
+  }
+  var mouseleave = function(d) {
+    Tooltip
+      .style("opacity", 0)
+  }
+
+  var node = svg.append("g")
+    .attr("transform", "translate (100,100")
+    .selectAll("circle")
+    .data(data)
+    .enter()
+    .append("circle")
+      .attr("class", "node")
+      .attr("r", function(d){ return d.values})
+      .attr("cx", width / 2)
+      .attr("cy", height / 2)
+      .style("fill", function(d){ return color(d.key)})
+      .style("fill-opacity", 0.8)
+      .on("mouseover", mouseover)
+      .on("mousemove", mousemove)
+      .on("mouseleave", mouseleave)
+      .call(d3.drag()
+           .on("start", dragstarted)
+           .on("drag", dragged)
+           .on("end", dragended));
+
+
+  var simulation = d3.forceSimulation()
+      .force("center", d3.forceCenter().x(width / 2).y(height / 2)) 
+      .force("charge", d3.forceManyBody().strength(.1)) 
+      .force("collide", d3.forceCollide().strength(.2).radius(function(d){ return (d.values+3) }).iterations(1))
+
+  simulation.nodes(data)
+      .on("tick", function(d){
+        node.attr("cx", function(d){ return d.x; })
+            .attr("cy", function(d){ return d.y; })
+      });
+
+  // What happens when a circle is dragged?
+  function dragstarted(d) {
+    if (!d3.event.active) simulation.alphaTarget(.03).restart();
+    d.fx = d.x;
+    d.fy = d.y;
+  }
+  function dragged(d) {
+    d.fx = d3.event.x;
+    d.fy = d3.event.y;
+  }
+  function dragended(d) {
+    if (!d3.event.active) simulation.alphaTarget(.03);
+    d.fx = null;
+    d.fy = null;
+  }
+</script>
+</body>
