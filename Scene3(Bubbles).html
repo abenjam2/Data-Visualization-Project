@@ -4,6 +4,13 @@
 
 <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
 
+<body>
+  <button type="button" onclick="window.location.href='index.html'">Scene 1</button>
+  <button type="button" onclick="window.location.href='Scene2(AverageMPGBar).html'">Scene 2</button>
+  <button type="button" onclick="window.location.href='Scene3(Bubbles).html'">Scene 3</button>
+  <h1>Difference in Fuel Efficiency in Different Fuel Types</h1>
+  <h5>Please mouseover the individual circle for the amount of vehicles of that fuel type. The circles may be dragged as well.</h5>
+
 <div id="my_dataviz"></div>
 
 <style>
@@ -12,15 +19,7 @@
   opacity: 1 !important;
 }
 </style>
-<body>
-    <button type="button" onclick="window.location.href='index.html'">Scene 1</button>
-    <button type="button" onclick="window.location.href='Scene2(AverageMPGBar).html'">Scene 2</button>
-    <button type="button" onclick="window.location.href='Scene3(Bubbles).html'">Scene 3</button>
-    <h1>Difference in Fuel Efficiency in Different Fuel Types</h1>
-    <h4>Lastly, we expore the amount of each fuel type represented in the data.</h4>
-    <h4>Although electric vehicles are by far the most efficient, there are very few electric vehicles.</h4>
-    <h4>As each person's carbon footprint expands each waking day, perhaps an increase in electric vehicles is a great way to save our planet.</h4>
-    <h6>Please mouseover the individual circle for the amount of vehicles of that fuel type. The circles may be dragged as well.</h6>
+
 <script>
 
 var width = 460
@@ -30,6 +29,18 @@ var svg = d3.select("#my_dataviz")
   .append("svg")
     .attr("width", width)
     .attr("height", height)
+    .call(g => g.append("text")
+        .attr("x", 200)
+        .attr("y", 50)
+        .attr("fill", "currentColor")
+        .text("Fuel Type Count"))
+    .call(g => g.append("text")
+        .attr("x", 300)
+        .attr("y", 115)
+        .attr("fill", "currentColor")
+        .attr("font-weight","bold")
+        .attr("font-size","10px")
+        .text("There are very few electric vehicles"))
 
   const data = [
                   { key: "Gasoline", values: 130 },
@@ -66,6 +77,7 @@ var svg = d3.select("#my_dataviz")
   }
 
   var node = svg.append("g")
+    .attr("transform", "translate (100,100")
     .selectAll("circle")
     .data(data)
     .enter()

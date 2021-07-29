@@ -30,10 +30,7 @@ div.tooltip {
   <button type="button" onclick="window.location.href='Scene2(AverageMPGBar).html'">Scene 2</button>
   <button type="button" onclick="window.location.href='Scene3(Bubbles).html'">Scene 3</button>
   <h1>Difference in Fuel Efficiency in Different Fuel Types</h1>
-  <h4>Now we explore the average miles per gallon for each fuel type.</h4>
-  <h4>Again, it is seen that electric vehicles are much more efficient that gasoline or diesel powered vehicles.</h4>
-  <h4>Unlike other fuel types, electric vehicles seem to be more efficient in the city rather than on the highway.</h4>
-  <h6>Please mouseover the individual bars for each bar's specific value.</h6>
+  <h5>Please mouseover the individual bars for each bar's specific value.</h5>
 <script src="https://d3js.org/d3.v5.min.js"></script>
 <script>
 
@@ -45,8 +42,6 @@ const data = [
     var margin = {top: 20, right: 20, bottom: 30, left: 40},
     width = 800 - margin.left - margin.right,
     height = 400 - margin.top - margin.bottom;
-
-    
    
     var x0  = d3.scaleBand().rangeRound([0, width], .5);
     var x1  = d3.scaleBand();
@@ -85,13 +80,34 @@ const data = [
     svg.append("g")
       .attr("class", "y axis")
       .call(yAxis)
-        .append("text")
-            .attr("transform", "rotate(-90)")
-            .attr("y", 6)
-            .attr("dy", ".71em")
-            .style("text-anchor", "end")
-            .style('font-weight','bold')
-            .text("Value");
+      .call(g => g.append("text")
+        .attr("x", -150)
+        .attr("y", -30)
+        .attr("transform", "rotate(270)")
+        .attr("fill", "currentColor")
+        .attr("text-anchor", "end")
+        .text("Miles Per Gallon"))
+      .call(g => g.append("text")
+        .attr("x", 675)
+        .attr("y", 30)
+        .attr("fill", "currentColor")
+        .attr("font-weight","bold")
+        .attr("font-size","10px")
+        .text("City MPG is higher than Highway MPG for electric vehicles only"))
+      .call(g => g.append("text")
+        .attr("x", 200)
+        .attr("y", 100)
+        .attr("fill", "currentColor")
+        .attr("font-weight","bold")
+        .attr("font-size","10px")
+        .text("Electric Vehicles are far more efficient"))
+      .call(g => g.append("text")
+        .attr("x", 190)
+        .attr("y", 110)
+        .attr("fill", "currentColor")
+        .attr("font-weight","bold")
+        .attr("font-size","10px")
+        .text("both in the city and on the highway"));
 
     var slice = svg.selectAll(".slice")
       .data(data)
@@ -143,5 +159,4 @@ const data = [
       .attr("dy", ".35em")
       .style("text-anchor", "end")
       .text(function(d) {return d; });
-
 </script>
